@@ -43,12 +43,17 @@
             <div class="row">
                 <form action="." method="POST">
                     <textarea class="form-control" name="contents" placeholder="Enter a message"></textarea>
-                    <input name="submit" type="submit" class="btn btn-success" value="Post message">
+                    <input name="submit" type="submit" class="btn btn-success" value="Post message" {% if game_over %}disabled{% endif %}>
                     <input name="reset" type="submit" class="btn btn-success" value="Reset">
                 </form>
             </div>
 
         </div>
-
+        <!---
+        <div class="container">
+            <h3>Raw message object for debugging:</h3>
+            {{ messages }}
+        </div>
+        --->
     </body>
 </html>
