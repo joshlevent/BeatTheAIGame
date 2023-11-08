@@ -2,13 +2,13 @@ from flask import Flask, redirect, render_template, request, url_for, session
 from openai import OpenAI
 import random
 import os
-import json
-
-os.environ['OPENAI_API_KEY'] = "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"
+from dotenv import load_dotenv
+project_folder = os.path.expanduser('~/beat_the_ai_game')  # adjust as appropriate
+load_dotenv(os.path.join(project_folder, '.env'))
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-app.secret_key = '54327852982375620367238'
+app.secret_key = os.getenv("APP_KEY")
 
 phrases = [
     "Leaves fall in autumn",
