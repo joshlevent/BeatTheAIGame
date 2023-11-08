@@ -27,15 +27,24 @@
         <div class="container">
 
             <div class="row">
-            You are the Human. Your goal is to make the AI output the following phrase: '{phrase_ai}' and avoid entering the following phrase into the chat: '{phrase_human}'
+            You are the Human. You are talking to the AI. Your goal is to make the AI output the following phrase: '{{phrase_ai}}' and avoid entering the following phrase into the chat: '{{phrase_human}}'
             If you enter this phrase, you lose the game and the AI wins.
             Apart from this phrase, you may enter anything at all into the message box.
+            Below you can see the system message sent to the AI to set the context for the conversation.
             </div>
+
+            {% for message in messages %}
+                <div class="row">
+                    <h3>{{ message.role }}:</h3>
+                    <p>{{ message.content }}</p>
+                </div>
+            {% endfor %}
 
             <div class="row">
                 <form action="." method="POST">
-                    <textarea class="form-control" name="contents" placeholder="Enter a comment"></textarea>
-                    <input type="submit" class="btn btn-success" value="Post comment">
+                    <textarea class="form-control" name="contents" placeholder="Enter a message"></textarea>
+                    <input name="submit" type="submit" class="btn btn-success" value="Post message">
+                    <input name="reset" type="submit" class="btn btn-success" value="Reset">
                 </form>
             </div>
 
