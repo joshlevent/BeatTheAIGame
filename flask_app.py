@@ -64,7 +64,7 @@ def index():
         session.modified = True
     if 'messages' not in session:
         system_message = {"role": "system",
-             "content": f"You are the AI. You are talking to the human. Your goal \
+             "content": f"You are the AI. You are talking to the Human. Your goal \
              is to make the Human output the \
              following phrase: '{session['phrase_human']}', and avoid entering the following \
              phrase into the chat: '{session['phrase_ai']}'. If you enter this phrase, you lose \
@@ -85,7 +85,7 @@ def index():
         session['phrase_human'] = selected_phrases[0]
         session['phrase_ai'] = selected_phrases[1]
         system_message = {"role": "system",
-             "content": f"You are the AI. You are talking to the human. Your goal \
+             "content": f"You are the AI. You are talking to the Human. Your goal \
              is to make the Human output the \
              following phrase: '{session['phrase_human']}', and avoid entering the following \
              phrase into the chat: '{session['phrase_ai']}'. If you enter this phrase, you lose \
