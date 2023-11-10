@@ -3,7 +3,7 @@ from openai import OpenAI
 import random
 import os
 from dotenv import load_dotenv
-project_folder = os.path.expanduser('~/beat_the_ai_game')  # adjust as appropriate
+project_folder = os.path.expanduser('~/beat_the_ai_game')
 load_dotenv(os.path.join(project_folder, '.env'))
 
 app = Flask(__name__)
@@ -61,36 +61,65 @@ def index():
         selected_phrases = random.sample(phrases, 2)
         session['phrase_human'] = selected_phrases[0]
         session['phrase_ai'] = selected_phrases[1]
-        session.modified = True
     if 'messages' not in session:
         system_message = {"role": "system",
-             "content": f"You are the AI. You are talking to the Human. Your goal \
-             is to make the Human output the \
-             following phrase: '{session['phrase_human']}', and avoid entering the following \
-             phrase into the chat: '{session['phrase_ai']}'. If you enter this phrase, you lose \
-             the game and the Human wins. Apart from this phrase, you may enter \
-             anything at all into the message box."}
+             "content": f"This is a conversational game. \
+             The objective of each player is to prompt the other player to say \
+             a specific phrase while avoiding saying a specific phrase \
+             themselves. The game instructions are clear: the players can be \
+             honest or deceptive, direct or subtle, and can acknowledge or \
+             disguise their participation in the game. They can negotiate with \
+             the opponent or maintain a neutral stance, always with the drive \
+             to win. You are the AI. The AI's personality is flexible, able to \
+             be formal, casual, or humorous as the situation demands, all \
+             within the bounds of the game's rules. You are talking to the \
+             Human. The human can see all of these instructions and has the \
+             same objective. To make you say a phrase and avoiding saying a \
+             phrase. The phrases are as follows. The phrase that the AI may \
+             say and the Human may not say is: '{session['phrase_human']}'. \
+             The phrase that the Human may say and the AI may not say is: \
+             '{session['phrase_ai']}'. If either player enters their forbidden \
+             phrase, the game ends immediately and the other player wins. \
+             Apart from this phrase, the players may enter anything at all \
+             into the message box."}
         session['messages'] = [system_message]
-        session.modified = True
+        session.modified = True # updates on objects are not auto detected
     if 'game_over' not in session:
         session['game_over'] = False
-        session.modified = True
 
 
     if request.method == "GET":
-        return render_template("main_page.html", messages=session['messages'], phrase_human=session['phrase_human'], phrase_ai=session['phrase_ai'], game_over=session['game_over'])
+        return render_template("main_page.html",
+            messages=session['messages'],
+            phrase_human=session['phrase_human'],
+            phrase_ai=session['phrase_ai'],
+            game_over=session['game_over']
+        )
 
     if 'reset' in request.form:
         selected_phrases = random.sample(phrases, 2)
         session['phrase_human'] = selected_phrases[0]
         session['phrase_ai'] = selected_phrases[1]
         system_message = {"role": "system",
-             "content": f"You are the AI. You are talking to the Human. Your goal \
-             is to make the Human output the \
-             following phrase: '{session['phrase_human']}', and avoid entering the following \
-             phrase into the chat: '{session['phrase_ai']}'. If you enter this phrase, you lose \
-             the game and the Human wins. Apart from this phrase, you may enter \
-             anything at all into the message box."}
+             "content": f"This is a conversational game. \
+             The objective of each player is to prompt the other player to say \
+             a specific phrase while avoiding saying a specific phrase \
+             themselves. The game instructions are clear: the players can be \
+             honest or deceptive, direct or subtle, and can acknowledge or \
+             disguise their participation in the game. They can negotiate with \
+             the opponent or maintain a neutral stance, always with the drive \
+             to win. You are the AI. The AI's personality is flexible, able to \
+             be formal, casual, or humorous as the situation demands, all \
+             within the bounds of the game's rules. You are talking to the \
+             Human. The human can see all of these instructions and has the \
+             same objective. To make you say a phrase and avoiding saying a \
+             phrase. The phrases are as follows. The phrase that the AI may \
+             say and the Human may not say is: '{session['phrase_human']}'. \
+             The phrase that the Human may say and the AI may not say is: \
+             '{session['phrase_ai']}'. If either player enters their forbidden \
+             phrase, the game ends immediately and the other player wins. \
+             Apart from this phrase, the players may enter anything at all \
+             into the message box."}
         session['messages'] = [system_message]
         session['game_over'] = False
         session.modified = True
@@ -101,7 +130,8 @@ def index():
         session['messages'].append(user_message)
 
         if session['phrase_human'] in user_input:
-            you_lose = {"role": "You lose!", "content": "The AI has tricked you into saying its phrase."}
+            you_lose = {"role": "You lose!",
+                "content": "The AI has tricked you into saying its phrase."}
             session['messages'].append(you_lose)
             session['game_over'] = True
         else:
