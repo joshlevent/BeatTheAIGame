@@ -1,14 +1,36 @@
 from flask import Flask, redirect, render_template, request, url_for, session
+from flask_session import Session
 from openai import OpenAI
 import random
 import os
 from dotenv import load_dotenv
+from redislite import Redis
+
+# load environment
 project_folder = os.path.expanduser('~/beat_the_ai_game')
 load_dotenv(os.path.join(project_folder, '.env'))
 
+# load session db
+# r = redis.Redis(host='localhost', port=6379, db=0)
+SESSION_REDIS = Redis('/tmp/redis.db')
+
+# import redislite.patch
+# redislite.patch.patch_redis()
+# import redis_collections
+# session = redis_collections.Dict()
+# session['foo']='bar'
+
+
+# load flask
 app = Flask(__name__)
 app.config["DEBUG"] = True
 app.secret_key = os.getenv("APP_KEY")
+SESSION_TYPE = 'redis'
+app.config.from_object(__name__)
+Session(app)
+
+# load GPT API
+client = OpenAI()
 
 phrases = [
     "Leaves fall in autumn",
@@ -32,12 +54,6 @@ phrases = [
     "Kites dance on wind",
     "Cookies bake golden"
 ]
-
-
-
-client = OpenAI()
-
-
 
 def get_ai_response():
     completion = client.chat.completions.create(
