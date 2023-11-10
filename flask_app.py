@@ -11,15 +11,7 @@ project_folder = os.path.expanduser('~/beat_the_ai_game')
 load_dotenv(os.path.join(project_folder, '.env'))
 
 # load session db
-# r = redis.Redis(host='localhost', port=6379, db=0)
 SESSION_REDIS = Redis('/tmp/redis.db')
-
-# import redislite.patch
-# redislite.patch.patch_redis()
-# import redis_collections
-# session = redis_collections.Dict()
-# session['foo']='bar'
-
 
 # load flask
 app = Flask(__name__)
