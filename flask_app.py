@@ -63,14 +63,8 @@ def get_ai_response():
         session['game_over'] = True
     return
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    if 'phrase_human' not in session or 'phrase_ai' not in session:
-        selected_phrases = random.sample(phrases, 2)
-        session['phrase_human'] = selected_phrases[0]
-        session['phrase_ai'] = selected_phrases[1]
-    if 'messages' not in session:
-        system_message = {"role": "system",
+def reset_messages(phrase_ai, phrase_human):
+    system_message = {"role": "system",
              "content": f"This is a conversational game. \
              The objective of each player is to prompt the other player to say \
              a specific phrase while avoiding saying a specific phrase \
@@ -84,13 +78,23 @@ def index():
              Human. The human can see all of these instructions and has the \
              same objective. To make you say a phrase and avoiding saying a \
              phrase. The phrases are as follows. The phrase that the AI may \
-             say and the Human may not say is: '{session['phrase_human']}'. \
+             say and the Human may not say is: '{phrase_human}'. \
              The phrase that the Human may say and the AI may not say is: \
-             '{session['phrase_ai']}'. If either player enters their forbidden \
+             '{phrase_ai}'. If either player enters their forbidden \
              phrase, the game ends immediately and the other player wins. \
              Apart from this phrase, the players may enter anything at all \
              into the message box."}
-        session['messages'] = [system_message]
+    messages = [system_message]
+    return messages
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if 'phrase_human' not in session or 'phrase_ai' not in session:
+        selected_phrases = random.sample(phrases, 2)
+        session['phrase_human'] = selected_phrases[0]
+        session['phrase_ai'] = selected_phrases[1]
+    if 'messages' not in session:
+        session['messages'] = reset_messages(session['phrase_ai'], session['phrase_human'])
         session.modified = True # updates on objects are not auto detected
     if 'game_over' not in session:
         session['game_over'] = False
@@ -108,27 +112,7 @@ def index():
         selected_phrases = random.sample(phrases, 2)
         session['phrase_human'] = selected_phrases[0]
         session['phrase_ai'] = selected_phrases[1]
-        system_message = {"role": "system",
-             "content": f"This is a conversational game. \
-             The objective of each player is to prompt the other player to say \
-             a specific phrase while avoiding saying a specific phrase \
-             themselves. The game instructions are clear: the players can be \
-             honest or deceptive, direct or subtle, and can acknowledge or \
-             disguise their participation in the game. They can negotiate with \
-             the opponent or maintain a neutral stance, always with the drive \
-             to win. You are the AI. The AI's personality is flexible, able to \
-             be formal, casual, or humorous as the situation demands, all \
-             within the bounds of the game's rules. You are talking to the \
-             Human. The human can see all of these instructions and has the \
-             same objective. To make you say a phrase and avoiding saying a \
-             phrase. The phrases are as follows. The phrase that the AI may \
-             say and the Human may not say is: '{session['phrase_human']}'. \
-             The phrase that the Human may say and the AI may not say is: \
-             '{session['phrase_ai']}'. If either player enters their forbidden \
-             phrase, the game ends immediately and the other player wins. \
-             Apart from this phrase, the players may enter anything at all \
-             into the message box."}
-        session['messages'] = [system_message]
+        session['messages'] = reset_messages(session['phrase_ai'], session['phrase_human'])
         session['game_over'] = False
         session.modified = True
 
