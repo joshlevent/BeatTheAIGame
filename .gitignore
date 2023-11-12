@@ -1,3 +1,6 @@
 *.pyc
 __pycache__
 .env
+.gcloudignore
+app.yaml
+.DS_Store

@@ -133,3 +133,7 @@ def index():
 
 
     return redirect(url_for('index'))
+
+if __name__ == "__main__":
+    # This is used when running locally only
+    flask_app.run(host='localhost', port=8080, debug=True)
